@@ -84,8 +84,6 @@ int LZ4Decompressor::isValied(vector<uint8_t> &array) {
 		BinaryReader r(array);
 		r.seekAbs(8);
 		int dataSize = r.readIntLE() + 16;
-		cout << array.size() << endl;
-		cout << dataSize << endl;
 		if (array.size() == dataSize) {
 			return 1;
 		}
