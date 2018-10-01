@@ -2,14 +2,14 @@
 
 using namespace std;
 
-vector<uint8_t> LZ4Decompressor::decompress(vector<uint8_t> &array) {
+vector<uint8_t> LZ4Decompressor::decompress(vector<uint8_t> &buffer) {
 
-	if (isValied(array) == 0) {
+	if (isValied(buffer) == 0) {
 		std::vector<uint8_t> emptyData;
 		return emptyData;
 	}
 
-	BinaryReader r(array);
+	BinaryReader reader(buffer);
 	vector<uint8_t> retArray;
 	int dataSize = 0;
 	int decompressedSize = 0;
@@ -22,35 +22,36 @@ vector<uint8_t> LZ4Decompressor::decompress(vector<uint8_t> &array) {
 	int retCurPos = 0;
 	int endPos = 0;
 
-	r.seekAbs(4);
-	decompressedSize = r.readIntLE();
-	dataSize = r.readIntLE();
+	reader.seekAbs(4);
+
+	decompressedSize = reader.readLInt();
+	dataSize = reader.readLInt();
 	endPos = dataSize + 16;
 	retArray = vector<uint8_t>(decompressedSize);
 
-	r.seekAbs(16);
+	reader.seekAbs(16);
 
 	while(true) {
-		token = r.readByte();
+		token = reader.readByte();
 
 		sqSize = token >> 4;
 		matchSize = (token & 0x0f) + 4;
 
 		if (sqSize == 15) {
-			sqSize += readAdditionalSize(r);
+			sqSize += readAdditionalSize(reader);
 		}
 
-		retArray = r.copyBytes(retArray, retCurPos, sqSize);
+		retArray = reader.copyBytes(retArray, retCurPos, sqSize);
 		retCurPos += sqSize;
 
-		if (r.getPos() >= endPos - 1) {
+		if (reader.getOffset() >= endPos - 1) {
 			break;
 		}
 
-		offset = r.readShortLE();
+		offset = reader.readLShort();
 
 		if (matchSize == 19) {
-			matchSize += readAdditionalSize(r);
+			matchSize += readAdditionalSize(reader);
 		}
 
 		if (matchSize > offset) {
@@ -79,12 +80,11 @@ int LZ4Decompressor::readAdditionalSize(BinaryReader &reader) {
 	}
 }
 
-int LZ4Decompressor::isValied(vector<uint8_t> &array) {
-	if (array.size() > 16) {
-		BinaryReader r(array);
-		r.seekAbs(8);
-		int dataSize = r.readIntLE() + 16;
-		if (array.size() == dataSize) {
+int LZ4Decompressor::isValied(vector<uint8_t> &buffer) {
+	if (buffer.size() > 16) {
+		BinaryReader reader(buffer, 8);
+		int dataSize = reader.readLInt() + 16;
+		if (buffer.size() == dataSize) {
 			return 1;
 		}
 	}

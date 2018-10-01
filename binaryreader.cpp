@@ -2,40 +2,49 @@
 
 using namespace std;
 
-BinaryReader::BinaryReader(vector<uint8_t> &array) {
-	ary = array;
-	curPos = 0;
+BinaryReader::BinaryReader(vector<uint8_t> &vector) {
+	buffer = vector;
+	offset = 0;
+}
+
+BinaryReader::BinaryReader(vector<uint8_t> &vector, int pos) {
+	buffer = vector;
+	offset = pos;
 }
 
 int BinaryReader::readByte() {
-	curPos++;
-	return ary[curPos - 1];
+	offset++;
+	return buffer[offset - 1];
 }
 
-int BinaryReader::readShortLE() {
-	curPos += 2;
-	return ary[curPos - 2] + (ary[curPos - 1] << 8);
+int BinaryReader::readLShort() {
+	offset += 2;
+	return buffer[offset - 2] + (buffer[offset - 1] << 8);
 }
 
-int BinaryReader::readIntLE() {
-	curPos += 4;
-	return ary[curPos - 4] + (ary[curPos - 3] << 8) + (ary[curPos - 2] << 16) + (ary[curPos - 1] << 24);
+int BinaryReader::readLInt() {
+	offset += 4;
+	return buffer[offset - 4] + (buffer[offset - 3] << 8) + (buffer[offset - 2] << 16) + (buffer[offset - 1] << 24);
 }
 
-vector<uint8_t>& BinaryReader::copyBytes(vector<uint8_t> &dst, int &offset, int &size) {
-	curPos += size;
-	copy(ary.begin() + curPos - size, ary.begin() + curPos, dst.begin() + offset);
+vector<uint8_t>& BinaryReader::copyBytes(vector<uint8_t> &dst, int &distance, int &size) {
+	offset += size;
+	copy(buffer.begin() + offset - size, buffer.begin() + offset, dst.begin() + distance);
 	return dst;
 }
 
 void BinaryReader::seekAbs(int pos) {
-	curPos = pos;
+	offset = pos;
 }
 
 void BinaryReader::seekRel(int diff) {
-	curPos += diff;
+	offset += diff;
 }
 
-int BinaryReader::getPos() {
-	return curPos;
+vector<uint8_t> BinaryReader::getBuffer(){
+	return buffer;
+}
+
+int BinaryReader::getOffset() {
+	return offset;
 }

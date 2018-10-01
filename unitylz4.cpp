@@ -19,20 +19,20 @@ PHP_FUNCTION (unity_lz4_uncompress) {
 	zend_string *result;
 	zend_string *data;
 
-	const unsigned char *binary;
+	const unsigned char *buffer;
 	size_t length;
 
 	ZEND_PARSE_PARAMETERS_START(1, 1)
 		Z_PARAM_STR(data)
 	ZEND_PARSE_PARAMETERS_END();
 
-	binary = (unsigned char *) ZSTR_VAL(data);
+	buffer = (unsigned char *) ZSTR_VAL(data);
 	length = ZSTR_LEN(data);
 
 	vector<uint8_t> vec;
 
 	for (int i = 0; i < length; i++) {
-		vec.push_back(binary[i]);
+		vec.push_back(buffer[i]);
 	}
 
 	LZ4Decompressor lz4;
