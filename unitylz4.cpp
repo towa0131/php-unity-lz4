@@ -42,10 +42,12 @@ PHP_FUNCTION (unity_lz4_uncompress) {
 		RETURN_NULL();
 	}
 
-	char *cstr = new char[outBuffer.size()];
+	char *cstr = (char*)emalloc(outBuffer.size());
+
 	copy(outBuffer.begin(), outBuffer.end(), cstr);
 
 	result = zend_string_init(cstr, outBuffer.size(), 0);
+	efree(cstr);
 
 	RETURN_STR(result);
 }
