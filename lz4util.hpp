@@ -5,24 +5,22 @@ using namespace std;
 
 class BinaryReader {
 private:
-	vector<uint8_t> buffer;
-	int offset;
+    vector<uint8_t> buffer;
+    int offset;
 public:
-	BinaryReader(vector<uint8_t> &vector);
-	BinaryReader(vector<uint8_t> &vector, int pos);
-	int readByte();
-	int readLShort();
-	int readLInt();
-	vector<uint8_t>& copyBytes(vector<uint8_t> &dst, int &distance, int &size);
-	void seekAbs(int pos);
-	void seekRel(int diff);
-	vector<uint8_t> getBuffer();
-	int getOffset();
+    BinaryReader(vector<uint8_t>&);
+    BinaryReader(vector<uint8_t>&, int);
+    int readByte();
+    int readInt16();
+    int readInt32();
+    vector<uint8_t>& copy(vector<uint8_t>&, int&, int&);
+    void setOffset(int);
+    int getOffset();
 };
 
 class LZ4Decompressor {
 public:
-	vector<uint8_t> decompress(vector<uint8_t> &buffer);
-	int isValied(vector<uint8_t> &buffer);
-	int readAdditionalSize(BinaryReader &reader);
+    vector<uint8_t> decompress(vector<uint8_t> &buffer);
+    bool isValied(vector<uint8_t> &buffer);
+    int readAdditionalSize(BinaryReader &reader);
 };

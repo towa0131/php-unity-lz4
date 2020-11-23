@@ -9,7 +9,6 @@ phpize
 ./configure $FLAG
 
 # make and copy .so file to the extension directory
-make
 make install
 
 # delete some files

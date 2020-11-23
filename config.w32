@@ -1,5 +1,5 @@
 ARG_ENABLE("unitylz4", "enable unitylz4 support", "no");
 
 if (PHP_UNITYLZ4 != "no") {
-	EXTENSION("unitylz4", "unitylz4.cpp lz4util.cpp binaryreader.cpp", PHP_EXTNAME_SHARED, "");
+    EXTENSION("unitylz4", "unitylz4.cpp lz4util.cpp binaryreader.cpp", PHP_EXTNAME_SHARED, "");
 }
