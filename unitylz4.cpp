@@ -77,10 +77,23 @@ PHP_MINFO_FUNCTION(unitylz4) {
     php_info_print_table_end();
 }
 
+#if PHP_MAJOR_VERSION >= 8
+ZEND_BEGIN_ARG_INFO_EX(arginfo_void, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+const zend_function_entry unitylz4_functions[] = {
+    PHP_FE(unity_lz4_uncompress, arginfo_void)
+    PHP_FE_END
+};
+
+#else
+
 const zend_function_entry unitylz4_functions[] = {
     PHP_FE(unity_lz4_uncompress, NULL)
     PHP_FE_END
 };
+
+#endif
 
 zend_module_entry unitylz4_module_entry = {
     STANDARD_MODULE_HEADER,
